@@ -55,7 +55,7 @@ public class PcgGameManager : MonoBehaviour
 
     public void RestartGame()
     {
-        RLGen.FlexibleGeneratorFunction();
+        SceneManager.LoadScene("MainScene");
     }
 
     public void QuitGame()

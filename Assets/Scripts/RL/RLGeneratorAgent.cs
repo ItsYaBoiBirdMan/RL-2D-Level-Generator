@@ -77,7 +77,7 @@ public class RLGeneratorAgent
 
             int actionIndex = (int)step.Item2;
 
-            // intrinsic penalty for placing enemies
+            // intrinsic penalty for placing enemies    
             float adjustedReward = reward;
             if (step.Item2 == GeneratorAction.Enemy)
                 adjustedReward -= 1f;

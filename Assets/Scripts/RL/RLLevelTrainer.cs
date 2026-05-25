@@ -101,15 +101,25 @@ public class RLLevelTrainer : MonoBehaviour
     {
         return _coinCount;
     }
-
+    
     public void FlexibleGeneratorFunction()
     {
-        Difficulty = PlayerPerformanceTracker.Difficulty;
+        Difficulty = PlayerPerformanceTracker.Instance.Difficulty;
+        _tileGrid = new TileType[LevelWidth, LevelHeight];
+        _decorationGrid = new TileType[LevelWidth, LevelHeight];
+        
+        _sideScrollingterrainAgent = new RLGeneratorAgent();
+        _topDownAgent = new RLGeneratorAgent();
+        _platformAgent = new RLGeneratorAgent();
+        _enemyAgent = new RLGeneratorAgent();
+        _pickUpAgent = new RLGeneratorAgent();
+        _collectiblesAgent = new RLGeneratorAgent();
+        _hazardAgent = new RLGeneratorAgent();
         
         switch (generationMode)
         {
             case GenerationMode.SideScroller:
-
+                
                 if (SideScrollerPlayer == null)
                 {
                     Debug.Log("No Side Scroller Player Object found. Stopping Generation");

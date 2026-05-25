@@ -2,14 +2,31 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+using UnityEngine;
+
 public class PlayerPerformanceTracker : MonoBehaviour
 {
+    public static PlayerPerformanceTracker Instance;
+
     [SerializeField] private int ConsecutiveWins;
     [SerializeField] private int ConsecutiveLosses;
-    [SerializeField] private float DifficultyIncrement;
+    [SerializeField] private float DifficultyIncrement = 0.1f;
 
     public float Difficulty;
-    
+
+    private void Awake()
+    {
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+
+        Instance = this;
+        
+        DontDestroyOnLoad(gameObject);
+    }
+
     public void UpdatePerformance(bool playerWon)
     {
         if (playerWon)
@@ -25,7 +42,7 @@ public class PlayerPerformanceTracker : MonoBehaviour
 
         AdjustDifficulty();
     }
-    
+
     private void AdjustDifficulty()
     {
         if (ConsecutiveWins >= 2)

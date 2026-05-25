@@ -765,7 +765,7 @@ MonoBehaviour:
   ConsecutiveWins: 0
   ConsecutiveLosses: 0
   DifficultyIncrement: 0.2
-  Difficulty: 0.5
+  Difficulty: 0
 --- !u!4 &1364505383
 Transform:
   m_ObjectHideFlags: 0
@@ -832,8 +832,8 @@ MonoBehaviour:
   CoinParent: {fileID: 65210886}
   HazardParent: {fileID: 674002768}
   SideScrollerPlayer: {fileID: 1834973776}
-  TopDownPlayer: {fileID: 0}
-  generationMode: 1
+  TopDownPlayer: {fileID: 1248383117}
+  generationMode: 0
   haveEnemies: 1
   havePlatforms: 0
   platformDifficultyRelation: 1

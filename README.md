@@ -112,6 +112,8 @@ Assets/Scripts/
 
 ## Setup Guide
 
+Navigate to (https://github.com/ItsYaBoiBirdMan/RL-2D-Level-Generator/releases/tag/asset_package) and download RL.Level.Generator.unitypackage. This package must be imported in your Unity Project.
+
 ### Phase 1: Basic Configuration
 
 #### Step 1: Create Block Parent with Composite Collider
@@ -236,8 +238,6 @@ Configure the following flags in **Generation Settings**:
 ---
 
 ## Usage Guide
-
-Navigate to (https://github.com/ItsYaBoiBirdMan/RL-2D-Level-Generator/releases/tag/asset_package) and download RL.Level.Generator.unitypackage. This package must be imported in your Unity Project 
 
 ### Basic Level Generation
 

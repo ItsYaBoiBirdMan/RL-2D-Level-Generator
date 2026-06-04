@@ -89,6 +89,8 @@ The Reinforcement Learning Level Generator is a sophisticated system designed to
 
 ### Step 1: Import Files
 
+Navigate to https://github.com/ItsYaBoiBirdMan/RL-2D-Level-Generator/releases/tag/asset_package and download RL.Level.Generator.unitypackage. This package must be imported in your Unity Project.
+
 Ensure all required scripts are present in your project:
 
 ```
@@ -111,8 +113,6 @@ Assets/Scripts/
 ---
 
 ## Setup Guide
-
-Navigate to (https://github.com/ItsYaBoiBirdMan/RL-2D-Level-Generator/releases/tag/asset_package) and download RL.Level.Generator.unitypackage. This package must be imported in your Unity Project.
 
 ### Phase 1: Basic Configuration
 

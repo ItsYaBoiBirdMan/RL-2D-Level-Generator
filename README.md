@@ -237,6 +237,8 @@ Configure the following flags in **Generation Settings**:
 
 ## Usage Guide
 
+Navigate to (https://github.com/ItsYaBoiBirdMan/RL-2D-Level-Generator/releases/tag/asset_package) and download RL.Level.Generator.unitypackage. This package must be imported in your Unity Project 
+
 ### Basic Level Generation
 
 #### Step 1: Configure Generation Mode

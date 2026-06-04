@@ -397,14 +397,9 @@ public bool IsTraining { get; private set; }
 // Update performance based on level outcome (true = win, false = loss)
 public void UpdatePerformance(bool playerWon)
 
-// Manually adjust difficulty
+// Used to adjust difficulty when level is completed or failed
 public void AdjustDifficulty()
 
-// Get current consecutive wins
-public int GetConsecutiveWins()
-
-// Get current consecutive losses
-public int GetConsecutiveLosses()
 ```
 
 #### Public Properties
@@ -414,7 +409,7 @@ public int GetConsecutiveLosses()
 public float DifficultyIncrement = 0.1f;
 
 // Current difficulty multiplier
-public float CurrentDifficulty { get; private set; }
+public float Difficulty { get; private set; }
 ```
 
 ### EnemyDifficultyAdjuster
@@ -428,15 +423,6 @@ public float MaxHealth = 100f;
 // Enemy movement speed (scales with difficulty)
 public float MovementSpeed = 5f;
 ```
-
-#### Auto-Scaling Behavior
-
-```
-ActualHealth = MaxHealth * DifficultyMultiplier
-ActualSpeed = MovementSpeed * DifficultyMultiplier
-```
-
----
 
 ## Best Practices
 

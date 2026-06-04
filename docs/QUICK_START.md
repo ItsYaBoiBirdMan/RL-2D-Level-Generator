@@ -118,7 +118,7 @@ public class LevelManager : MonoBehaviour
         tracker.UpdatePerformance(won);
         
         // Generate next level
-        GetComponent<RLLevelTrainer>().FlexibleGeneration();
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 }
 ```

@@ -74,7 +74,7 @@ The Reinforcement Learning Level Generator is a sophisticated system designed to
 ## Requirements
 
 ### Software
-- **Unity 2020.3 LTS** or newer
+- **Unity 2022.3 LTS** or newer
 - C# 7.3 or higher
 - 2D gameplay setup
 

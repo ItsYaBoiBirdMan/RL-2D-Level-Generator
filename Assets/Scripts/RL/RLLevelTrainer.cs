@@ -258,6 +258,7 @@ public class RLLevelTrainer : MonoBehaviour
                 InstantiateBlocks();
                 InstantiateEnemies();
                 InstantiateHazards();
+                InstantiatePickups();
         
                 gridCoordPlayerSpawn = SetTopDownPlayerSpawnPoint();
 

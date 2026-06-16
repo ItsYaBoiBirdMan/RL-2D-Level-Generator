@@ -35,30 +35,44 @@ public class RLLevelTrainer : MonoBehaviour
     [SerializeField] private int LevelWidth = 150;
     [SerializeField] private int LevelHeight = 50;
     [SerializeField] private int TrainingEpisodes = 500;
-    [SerializeField] private int BlockSize = 1;
 
     [SerializeField] private float Difficulty;
     
     [Header("PREFABS")] 
     [Space]
-    [Header("Ground Blocks")] 
-    [SerializeField] private GameObject GroundBlock;
-    [SerializeField] private GameObject GroundMiddleBlock;
-    [SerializeField] private GameObject GroundTopLeftCornerBlock;
-    [SerializeField] private GameObject GroundTopRightCornerBlock;
-    [SerializeField] private GameObject GroundTopMiddleBlock;
-    [SerializeField] private GameObject GroundBottomMiddleBlock;
-    [SerializeField] private GameObject GroundBottomLeftCornerBlock;
-    [SerializeField] private GameObject GroundBottomRightCornerBlock;
-    [SerializeField] private GameObject GroundMiddleLeftBlock;
-    [SerializeField] private GameObject GroundMiddleRightBlock;
-    [SerializeField] private GameObject GroundPointUpBlock;
-    [SerializeField] private GameObject GroundPointDownBlock;
-    [SerializeField] private GameObject GroundPointLeftBlock;
-    [SerializeField] private GameObject GroundPointRightBlock;
-    [SerializeField] private GameObject GroundAloneBlock;
-    [SerializeField] private GameObject GroundSidewaysBlock;
-    [SerializeField] private GameObject GroundUpwardsBlock;
+    [Header("Side-Scroller Ground Blocks")] 
+    [SerializeField] private GameObject SideScrollerGroundBlock;
+    [SerializeField] private GameObject SideScrollerGroundMiddleBlock;
+    [SerializeField] private GameObject SideScrollerGroundTopLeftCornerBlock;
+    [SerializeField] private GameObject SideScrollerGroundTopRightCornerBlock;
+    [SerializeField] private GameObject SideScrollerGroundTopMiddleBlock;
+    [SerializeField] private GameObject SideScrollerGroundBottomMiddleBlock;
+    [SerializeField] private GameObject SideScrollerGroundBottomLeftCornerBlock;
+    [SerializeField] private GameObject SideScrollerGroundBottomRightCornerBlock;
+    [SerializeField] private GameObject SideScrollerGroundMiddleLeftBlock;
+    [SerializeField] private GameObject SideScrollerGroundMiddleRightBlock;
+    [SerializeField] private GameObject SideScrollerGroundPeakPointBlock;
+    
+    
+    [Header("Top-Down Ground Blocks")] 
+    [SerializeField] private GameObject TopDownGroundBlock;
+    [SerializeField] private GameObject TopDownGroundMiddleBlock;
+    [SerializeField] private GameObject TopDownGroundTopLeftCornerBlock;
+    [SerializeField] private GameObject TopDownGroundTopRightCornerBlock;
+    [SerializeField] private GameObject TopDownGroundTopMiddleBlock;
+    [SerializeField] private GameObject TopDownGroundBottomMiddleBlock;
+    [SerializeField] private GameObject TopDownGroundBottomLeftCornerBlock;
+    [SerializeField] private GameObject TopDownGroundBottomRightCornerBlock;
+    [SerializeField] private GameObject TopDownGroundMiddleLeftBlock;
+    [SerializeField] private GameObject TopDownGroundMiddleRightBlock;
+    [SerializeField] private GameObject TopDownGroundPointUpBlock;
+    [SerializeField] private GameObject TopDownGroundPointDownBlock;
+    [SerializeField] private GameObject TopDownGroundPointLeftBlock;
+    [SerializeField] private GameObject TopDownGroundPointRightBlock;
+    [SerializeField] private GameObject TopDownGroundAloneBlock;
+    [SerializeField] private GameObject TopDownGroundSidewaysBlock;
+    [SerializeField] private GameObject TopDownGroundUpwardsBlock;
+    
     
     [Header("Platform Blocks")]
     [SerializeField] private GameObject PlatformBlock;
@@ -111,6 +125,7 @@ public class RLLevelTrainer : MonoBehaviour
     private TileType[,] _decorationGrid;
     private int[] _groundHeight;
     private GameObject _actualPlayer;
+    private float _blockSize = 1;
     
  
     private int _enemyCount;
@@ -134,6 +149,7 @@ public class RLLevelTrainer : MonoBehaviour
     
     public void FlexibleGeneratorFunction()
     {
+        _blockSize = SideScrollerGroundMiddleBlock.transform.localScale.x;
         Difficulty = PlayerPerformanceTracker.Instance.Difficulty;
         _tileGrid = new TileType[LevelWidth, LevelHeight];
         _decorationGrid = new TileType[LevelWidth, LevelHeight];
@@ -462,25 +478,20 @@ public class RLLevelTrainer : MonoBehaviour
         {
             for (int y = 0; y < LevelHeight; y++)
             {
-                // Only convert GROUND into wall decisions
-                if (original[x, y] != TileType.Ground)
-                    continue;
+                if (original[x, y] != TileType.Ground) continue;
 
                 bool left  = x > 0 && IsWallTile(original[x - 1, y]);
                 bool right = x < LevelWidth - 1 && IsWallTile(original[x + 1, y]);
                 bool up    = y < LevelHeight - 1 && IsWallTile(original[x, y + 1]);
                 bool down  = y > 0 && IsWallTile(original[x, y - 1]);
 
-                // If no wall neighbors → stay ground (prevents empty holes)
-
-                // Isolated
+                
                 if (!up && !down && !left && !right)
                 {
                     _tileGrid[x, y] = TileType.WallAlone;
                     continue;
                 }
-
-                // Straight lines
+                
                 if (left && right && !up && !down)
                 {
                     _tileGrid[x, y] = TileType.WallSideways;
@@ -492,8 +503,7 @@ public class RLLevelTrainer : MonoBehaviour
                     _tileGrid[x, y] = TileType.WallUpwards;
                     continue;
                 }
-
-                // T-shapes
+                
                 if (left && right && up && !down)
                 {
                     _tileGrid[x, y] = TileType.WallBottom;
@@ -517,8 +527,7 @@ public class RLLevelTrainer : MonoBehaviour
                     _tileGrid[x, y] = TileType.WallLeft;
                     continue;
                 }
-
-                // Corners
+                
                 if (down && right && !up && !left)
                 {
                     _tileGrid[x, y] = TileType.WallTopLeftCorner;
@@ -2905,51 +2914,51 @@ public class RLLevelTrainer : MonoBehaviour
         {
             for (int y = 0; y < LevelHeight; y++)
             {
-                Vector3 position = new Vector3(x * BlockSize, y * BlockSize, 0);
+                Vector3 position = new Vector3(x * _blockSize, y * _blockSize, 0);
 
                 switch (_tileGrid[x, y])
                 {
                     case TileType.Ground:
-                        Instantiate(GroundBlock, position, Quaternion.identity, BlockParent);
+                        Instantiate(SideScrollerGroundBlock, position, Quaternion.identity, BlockParent);
                         break;
                     
                     case TileType.GroundMiddle:
-                        Instantiate(GroundMiddleBlock, position, Quaternion.identity, BlockParent);
+                        Instantiate(SideScrollerGroundMiddleBlock, position, Quaternion.identity, BlockParent);
                         break;
                     case TileType.GroundSurface:
-                        Instantiate(GroundTopMiddleBlock, position, Quaternion.identity, BlockParent);
+                        Instantiate(SideScrollerGroundTopMiddleBlock, position, Quaternion.identity, BlockParent);
                         break;
                                 
                     case TileType.GroundTopLeftCorner:
-                        Instantiate(GroundTopLeftCornerBlock, position, Quaternion.identity, BlockParent);
+                        Instantiate(SideScrollerGroundTopLeftCornerBlock, position, Quaternion.identity, BlockParent);
                         break;
                                 
                     case TileType.GroundTopRightCorner:
-                        Instantiate(GroundTopRightCornerBlock, position, Quaternion.identity, BlockParent);
+                        Instantiate(SideScrollerGroundTopRightCornerBlock, position, Quaternion.identity, BlockParent);
                         break;
                                 
                     case TileType.GroundBottom:
-                        Instantiate(GroundBottomMiddleBlock, position, Quaternion.identity, BlockParent);
+                        Instantiate(SideScrollerGroundBottomMiddleBlock, position, Quaternion.identity, BlockParent);
                         break;
                                 
                     case TileType.GroundLeftEdge:
-                        Instantiate(GroundMiddleLeftBlock, position, Quaternion.identity, BlockParent);
+                        Instantiate(SideScrollerGroundMiddleLeftBlock, position, Quaternion.identity, BlockParent);
                         break;
                                 
                     case TileType.GroundRightEdge:
-                        Instantiate(GroundMiddleRightBlock, position, Quaternion.identity, BlockParent);
+                        Instantiate(SideScrollerGroundMiddleRightBlock, position, Quaternion.identity, BlockParent);
                         break;
                                 
                     case TileType.GroundBottomLeftCorner:
-                        Instantiate(GroundBottomLeftCornerBlock, position, Quaternion.identity, BlockParent);
+                        Instantiate(SideScrollerGroundBottomLeftCornerBlock, position, Quaternion.identity, BlockParent);
                         break;
                                 
                     case TileType.GroundBottomRightCorner:
-                        Instantiate(GroundBottomRightCornerBlock, position, Quaternion.identity, BlockParent);
+                        Instantiate(SideScrollerGroundBottomRightCornerBlock, position, Quaternion.identity, BlockParent);
                         break;
                     
                     case TileType.GroundPeakPoint:
-                        Instantiate(GroundPointUpBlock, position, Quaternion.identity, BlockParent);
+                        Instantiate(SideScrollerGroundPeakPointBlock, position, Quaternion.identity, BlockParent);
                         break;
                     
                     case TileType.Platform:
@@ -2993,71 +3002,71 @@ public class RLLevelTrainer : MonoBehaviour
         {
             for (int y = 0; y < LevelHeight; y++)
             {
-                Vector3 position = new Vector3(x * BlockSize, y * BlockSize, 0);
+                Vector3 position = new Vector3(x * _blockSize, y * _blockSize, 0);
 
                 switch (_tileGrid[x, y])
                 {
                     case TileType.Ground:
-                        Instantiate(GroundBlock, position, Quaternion.identity, BlockParent);
+                        Instantiate(TopDownGroundBlock, position, Quaternion.identity, BlockParent);
                         break;
                     
                     case TileType.WallCenter:
-                        Instantiate(GroundMiddleBlock, position, Quaternion.identity, BlockParent);
+                        Instantiate(TopDownGroundMiddleBlock, position, Quaternion.identity, BlockParent);
                         break;
                     case TileType.WallTop:
-                        Instantiate(GroundTopMiddleBlock, position, Quaternion.identity, BlockParent);
+                        Instantiate(TopDownGroundTopMiddleBlock, position, Quaternion.identity, BlockParent);
                         break;
                                 
                     case TileType.WallTopLeftCorner:
-                        Instantiate(GroundTopLeftCornerBlock, position, Quaternion.identity, BlockParent);
+                        Instantiate(TopDownGroundTopLeftCornerBlock, position, Quaternion.identity, BlockParent);
                         break;
                                 
                     case TileType.WallTopRightCorner:
-                        Instantiate(GroundTopRightCornerBlock, position, Quaternion.identity, BlockParent);
+                        Instantiate(TopDownGroundTopRightCornerBlock, position, Quaternion.identity, BlockParent);
                         break;
                                 
                     case TileType.WallBottom:
-                        Instantiate(GroundBottomMiddleBlock, position, Quaternion.identity, BlockParent);
+                        Instantiate(TopDownGroundBottomMiddleBlock, position, Quaternion.identity, BlockParent);
                         break;
                                 
                     case TileType.WallLeft:
-                        Instantiate(GroundMiddleLeftBlock, position, Quaternion.identity, BlockParent);
+                        Instantiate(TopDownGroundMiddleLeftBlock, position, Quaternion.identity, BlockParent);
                         break;
                                 
                     case TileType.WallRight:
-                        Instantiate(GroundMiddleRightBlock, position, Quaternion.identity, BlockParent);
+                        Instantiate(TopDownGroundMiddleRightBlock, position, Quaternion.identity, BlockParent);
                         break;
                                 
                     case TileType.WallBottomLeftCorner:
-                        Instantiate(GroundBottomLeftCornerBlock, position, Quaternion.identity, BlockParent);
+                        Instantiate(TopDownGroundBottomLeftCornerBlock, position, Quaternion.identity, BlockParent);
                         break;
                                 
                     case TileType.WallBottomRightCorner:
-                        Instantiate(GroundBottomRightCornerBlock, position, Quaternion.identity, BlockParent);
+                        Instantiate(TopDownGroundBottomRightCornerBlock, position, Quaternion.identity, BlockParent);
                         break;
                     
                     case TileType.WallPointUp:
-                        Instantiate(GroundPointUpBlock, position, Quaternion.identity, BlockParent);
+                        Instantiate(TopDownGroundPointUpBlock, position, Quaternion.identity, BlockParent);
                         break;
                     
                     case TileType.WallPointDown:
-                        Instantiate(GroundPointDownBlock, position, Quaternion.identity, BlockParent);
+                        Instantiate(TopDownGroundPointDownBlock, position, Quaternion.identity, BlockParent);
                         break;
                     
                     case TileType.WallPointLeft:
-                        Instantiate(GroundPointLeftBlock, position, Quaternion.identity, BlockParent);
+                        Instantiate(TopDownGroundPointLeftBlock, position, Quaternion.identity, BlockParent);
                         break;
                     
                     case TileType.WallPointRight:
-                        Instantiate(GroundPointRightBlock, position, Quaternion.identity, BlockParent);
+                        Instantiate(TopDownGroundPointRightBlock, position, Quaternion.identity, BlockParent);
                         break;
                     
                     case TileType.WallSideways:
-                        Instantiate(GroundSidewaysBlock, position, Quaternion.identity, BlockParent);
+                        Instantiate(TopDownGroundSidewaysBlock, position, Quaternion.identity, BlockParent);
                         break;
                     
                     case TileType.WallUpwards:
-                        Instantiate(GroundUpwardsBlock, position, Quaternion.identity, BlockParent);
+                        Instantiate(TopDownGroundUpwardsBlock, position, Quaternion.identity, BlockParent);
                         break;
                 }
             }
@@ -3319,7 +3328,7 @@ public class RLLevelTrainer : MonoBehaviour
         {
             for (int y = 0; y < LevelHeight; y++)
             {
-                Vector3 position = new Vector3(x * BlockSize, y * BlockSize, 0);
+                Vector3 position = new Vector3(x * _blockSize, y * _blockSize, 0);
 
                 if (_tileGrid[x, y] == TileType.Enemy && generationMode == GenerationMode.SideScroller) enemyList.Add(Instantiate(SideScrollingEnemyPerfab, position, Quaternion.identity, EnemyParent));
                 else if (_tileGrid[x, y] == TileType.Enemy && generationMode == GenerationMode.TopDown) enemyList.Add(Instantiate(TopDownEnemyPerfab, position, Quaternion.identity, EnemyParent));
@@ -3345,7 +3354,7 @@ public class RLLevelTrainer : MonoBehaviour
         {
             for (int y = 0; y < LevelHeight; y++)
             {
-                Vector3 position = new Vector3(x * BlockSize, y * BlockSize, 0);
+                Vector3 position = new Vector3(x * _blockSize, y * _blockSize, 0);
 
                 switch (_tileGrid[x, y])
                 {
@@ -3369,7 +3378,7 @@ public class RLLevelTrainer : MonoBehaviour
         {
             for (int y = 0; y < LevelHeight; y++)
             {
-                Vector3 position = new Vector3(x * BlockSize, y * BlockSize, 0);
+                Vector3 position = new Vector3(x * _blockSize, y * _blockSize, 0);
 
                 if(_tileGrid[x, y] == TileType.Hazard) Instantiate(HazardPrefab, position, Quaternion.identity, HazardParent);
             }
@@ -3391,7 +3400,7 @@ public class RLLevelTrainer : MonoBehaviour
     
     private Vector3 GridCoordinatesToWorldCoordinates(int x, int y)
     {
-        return new Vector3(x * BlockSize, y * BlockSize, 0f);
+        return new Vector3(x * _blockSize, y * _blockSize, 0f);
     }
     
     private Vector2Int SetPlayerSpawnPoint()

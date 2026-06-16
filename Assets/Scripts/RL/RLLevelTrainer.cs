@@ -27,10 +27,10 @@ public class RLLevelTrainer : MonoBehaviour
         MoreOnLowerDifficulty
     }
 
-    [Header("Player Performance Tracker")] 
+    [Header("PLAYER PERFORMANCE TRACKER")] 
     [SerializeField] private PlayerPerformanceTracker PlayerPerformanceTracker;
     
-    [Header("Basic Settings")]
+    [Header("BASIC SETTINGS")]
     
     [SerializeField] private int LevelWidth = 150;
     [SerializeField] private int LevelHeight = 50;
@@ -39,30 +39,59 @@ public class RLLevelTrainer : MonoBehaviour
 
     [SerializeField] private float Difficulty;
     
-    [Header("Prefabs")] 
+    [Header("PREFABS")] 
+    [Space]
+    [Header("Ground Blocks")] 
     [SerializeField] private GameObject GroundBlock;
+    [SerializeField] private GameObject GroundMiddleBlock;
+    [SerializeField] private GameObject GroundTopLeftCornerBlock;
+    [SerializeField] private GameObject GroundTopRightCornerBlock;
+    [SerializeField] private GameObject GroundTopMiddleBlock;
+    [SerializeField] private GameObject GroundBottomMiddleBlock;
+    [SerializeField] private GameObject GroundBottomLeftCornerBlock;
+    [SerializeField] private GameObject GroundBottomRightCornerBlock;
+    [SerializeField] private GameObject GroundMiddleLeftBlock;
+    [SerializeField] private GameObject GroundMiddleRightBlock;
+    [SerializeField] private GameObject GroundPointUpBlock;
+    [SerializeField] private GameObject GroundPointDownBlock;
+    [SerializeField] private GameObject GroundPointLeftBlock;
+    [SerializeField] private GameObject GroundPointRightBlock;
+    [SerializeField] private GameObject GroundAloneBlock;
+    [SerializeField] private GameObject GroundSidewaysBlock;
+    [SerializeField] private GameObject GroundUpwardsBlock;
+    
+    [Header("Platform Blocks")]
     [SerializeField] private GameObject PlatformBlock;
+    [SerializeField] private GameObject PlatformMiddleBlock;
+    [SerializeField] private GameObject PlatformLeftBlock;
+    [SerializeField] private GameObject PlatformRightBlock;
+    
+    [Header("Edge Triggers")]
     [SerializeField] private GameObject LeftEdgeTrigger;
     [SerializeField] private GameObject RightEdgeTrigger;
+    
+    [Header("Enemy Prefabs")]
     [SerializeField] private GameObject SideScrollingEnemyPerfab;
     [SerializeField] private GameObject TopDownEnemyPerfab;
+    
+    [Header("Level Component Prefabs")]
     [SerializeField] private GameObject CoinPrefab;
     [SerializeField] private GameObject PickupPrefab;
     [SerializeField] private GameObject HazardPrefab;
     [SerializeField] private GameObject DeathPlane;
     
-    [Header("Object Parents")]
+    [Header("OBJECT PARENTS")]
     [SerializeField] private Transform BlockParent;
     [SerializeField] private Transform EdgeParent;
     [SerializeField] private Transform EnemyParent;
     [SerializeField] private Transform CoinParent;
     [SerializeField] private Transform HazardParent;
     
-    [Header("Player Object")]
+    [Header("PLAYER OBJECTS")]
     [SerializeField] private GameObject SideScrollerPlayer;
     [SerializeField] private GameObject TopDownPlayer;
 
-    [Header("Generation Settings")] 
+    [Header("GENERATION SETTINGS")] 
     [SerializeField] private GenerationMode generationMode;
     [SerializeField] private bool haveEnemies;
     [SerializeField] private bool havePlatforms;
@@ -74,8 +103,9 @@ public class RLLevelTrainer : MonoBehaviour
     [SerializeField] private bool haveCoins;
     [SerializeField] private bool haveEnemyScaling;
 
-    [Header("Debug")] 
+    [Header("DEBUG")] 
     [SerializeField] private bool DoNotInstantiate;
+    [SerializeField] private bool ShowTilesetInfo;
     
     private TileType[,] _tileGrid;
     private TileType[,] _decorationGrid;
@@ -176,11 +206,12 @@ public class RLLevelTrainer : MonoBehaviour
                 }
                     
                 AddEdges();
-                
                 if(haveEnemies) Generate2DSideScrollingEnemiesWithRL();
                 if(havePickups) GenerateHealthPickupsWithRL();
                 if(haveHazards) GenerateStageHazardsWithRL();
                 if(haveCoins) Generate2DSideScrollingCoinsWithRL();
+                AutoTileSideScrollerGround();
+                AutoTileSideScrollerPlatforms();
                 
                 Debug.Log("Training complete");
         
@@ -240,6 +271,8 @@ public class RLLevelTrainer : MonoBehaviour
                 if(havePickups) GenerateTopDownHealthPickupsWithRL();
                 if(haveHazards) GenerateTopDownStageHazardsWithRL();
                 if(haveCoins) GenerateTopDownCoinsWithRL();
+                
+                AutoTileTopDownWalls();
         
                 Debug.Log("Training complete");
                 
@@ -255,7 +288,7 @@ public class RLLevelTrainer : MonoBehaviour
                 Debug.Log("Enemy count: " + _enemyCount);
                 Debug.Log("Coin count: " + _coinCount);
         
-                InstantiateBlocks();
+                InstantiateTopDownBlocks();
                 InstantiateEnemies();
                 InstantiateHazards();
                 InstantiatePickups();
@@ -269,6 +302,296 @@ public class RLLevelTrainer : MonoBehaviour
                 break;
         }
     }
+    
+    private void AutoTileSideScrollerGround()
+    {
+        for (int x = 0; x < LevelWidth; x++)
+        {
+            for (int y = 0; y < LevelHeight; y++)
+            {
+                if (_tileGrid[x, y] != TileType.Ground)
+                    continue;
+
+                bool left =
+                    x > 0 &&
+                    IsGroundTile(_tileGrid[x - 1, y]);
+
+                bool right =
+                    x < LevelWidth - 1 &&
+                    IsGroundTile(_tileGrid[x + 1, y]);
+
+                bool up =
+                    y < LevelHeight - 1 &&
+                    IsGroundTile(_tileGrid[x, y + 1]);
+
+                bool down =
+                    y > 0 &&
+                    IsGroundTile(_tileGrid[x, y - 1]);
+                
+                if (!up && down && !left && !right)
+                {
+                    _tileGrid[x, y] = TileType.GroundPeakPoint;
+                }
+
+                // Top corners
+                else if (!up && !left)
+                {
+                    _tileGrid[x, y] =
+                        TileType.GroundTopLeftCorner;
+                }
+                else if (!up && !right)
+                {
+                    _tileGrid[x, y] =
+                        TileType.GroundTopRightCorner;
+                }
+
+                // Bottom corners
+                else if (!down && !left)
+                {
+                    _tileGrid[x, y] =
+                        TileType.GroundBottomLeftCorner;
+                }
+                else if (!down && !right)
+                {
+                    _tileGrid[x, y] =
+                        TileType.GroundBottomRightCorner;
+                }
+
+                // ===== EDGES =====
+                
+                else if (!up)
+                {
+                    _tileGrid[x, y] =
+                        TileType.GroundSurface;
+                }
+                else if (!left)
+                {
+                    _tileGrid[x, y] = TileType.GroundLeftEdge;
+                }
+                else if (!right)
+                {
+                    _tileGrid[x, y] = TileType.GroundRightEdge;
+                }
+                else if (!down)
+                {
+                    _tileGrid[x, y] = TileType.GroundBottom;
+                }
+
+                // ===== INTERIOR =====
+
+                else
+                {
+                    _tileGrid[x, y] = TileType.GroundMiddle;
+                }
+            }
+        }
+    }
+    
+    private void AutoTileSideScrollerPlatforms()
+    {
+        for (int x = 0; x < LevelWidth; x++)
+        {
+            for (int y = 0; y < LevelHeight; y++)
+            {
+                if (_tileGrid[x, y] != TileType.Platform)
+                    continue;
+
+                bool left =
+                    x > 0 &&
+                    IsPlatformTile(_tileGrid[x - 1, y]);
+
+                bool right =
+                    x < LevelWidth - 1 &&
+                    IsPlatformTile(_tileGrid[x + 1, y]);
+                
+                
+                if (!left)
+                {
+                    _tileGrid[x, y] = TileType.PlatformLeftEdge;
+                }
+                
+                else if (!right)
+                {
+                    _tileGrid[x, y] = TileType.PlatformRightEdge;
+                }
+
+                else
+                {
+                    _tileGrid[x, y] = TileType.PlatformMiddle;
+                }
+            }
+        }
+    }
+    
+    private bool IsGroundTile(TileType tile)
+    {
+        return tile == TileType.Ground ||
+               tile == TileType.GroundSurface ||
+               tile == TileType.GroundMiddle ||
+               tile == TileType.GroundLeftEdge ||
+               tile == TileType.GroundRightEdge ||
+               tile == TileType.GroundBottom ||
+               tile == TileType.GroundTopLeftCorner ||
+               tile == TileType.GroundTopRightCorner ||
+               tile == TileType.GroundBottomLeftCorner ||
+               tile == TileType.GroundBottomRightCorner;
+    }
+    
+    private bool IsGround(int x, int y)
+    {
+        if (x < 0 || x >= LevelWidth ||
+            y < 0 || y >= LevelHeight)
+            return false;
+
+        return IsGroundTile(_tileGrid[x, y]);
+    }
+    
+    private bool IsPlatformTile(TileType tile)
+    {
+        return tile == TileType.Platform ||
+               tile == TileType.PlatformMiddle ||
+               tile == TileType.PlatformLeftEdge ||
+               tile == TileType.PlatformRightEdge;
+    }
+    
+    private void AutoTileTopDownWalls()
+    {
+        TileType[,] original = (TileType[,])_tileGrid.Clone();
+
+        for (int x = 0; x < LevelWidth; x++)
+        {
+            for (int y = 0; y < LevelHeight; y++)
+            {
+                // Only convert GROUND into wall decisions
+                if (original[x, y] != TileType.Ground)
+                    continue;
+
+                bool left  = x > 0 && IsWallTile(original[x - 1, y]);
+                bool right = x < LevelWidth - 1 && IsWallTile(original[x + 1, y]);
+                bool up    = y < LevelHeight - 1 && IsWallTile(original[x, y + 1]);
+                bool down  = y > 0 && IsWallTile(original[x, y - 1]);
+
+                // If no wall neighbors → stay ground (prevents empty holes)
+
+                // Isolated
+                if (!up && !down && !left && !right)
+                {
+                    _tileGrid[x, y] = TileType.WallAlone;
+                    continue;
+                }
+
+                // Straight lines
+                if (left && right && !up && !down)
+                {
+                    _tileGrid[x, y] = TileType.WallSideways;
+                    continue;
+                }
+
+                if (up && down && !left && !right)
+                {
+                    _tileGrid[x, y] = TileType.WallUpwards;
+                    continue;
+                }
+
+                // T-shapes
+                if (left && right && up && !down)
+                {
+                    _tileGrid[x, y] = TileType.WallBottom;
+                    continue;
+                }
+
+                if (left && right && down && !up)
+                {
+                    _tileGrid[x, y] = TileType.WallTop;
+                    continue;
+                }
+
+                if (up && down && left && !right)
+                {
+                    _tileGrid[x, y] = TileType.WallRight;
+                    continue;
+                }
+
+                if (up && down && right && !left)
+                {
+                    _tileGrid[x, y] = TileType.WallLeft;
+                    continue;
+                }
+
+                // Corners
+                if (down && right && !up && !left)
+                {
+                    _tileGrid[x, y] = TileType.WallTopLeftCorner;
+                    continue;
+                }
+
+                if (down && left && !up && !right)
+                {
+                    _tileGrid[x, y] = TileType.WallTopRightCorner;
+                    continue;
+                }
+
+                if (up && right && !down && !left)
+                {
+                    _tileGrid[x, y] = TileType.WallBottomLeftCorner;
+                    continue;
+                }
+
+                if (up && left && !down && !right)
+                {
+                    _tileGrid[x, y] = TileType.WallBottomRightCorner;
+                    continue;
+                }
+
+                if (!up && !right && !left && down)
+                {
+                    _tileGrid[x, y] = TileType.WallPointUp;
+                    continue;
+                }
+
+                if (up && !right && !left && !down)
+                {
+                    _tileGrid[x, y] = TileType.WallPointDown;
+                    continue;
+                }
+
+                if (!up && !right && left && !down)
+                {
+                    _tileGrid[x, y] = TileType.WallPointRight;
+                    continue;
+                }
+
+                if (!up && right && !left && !down)
+                {
+                    _tileGrid[x, y] = TileType.WallPointLeft;
+                    continue;
+                }
+                
+                _tileGrid[x, y] = TileType.WallCenter;
+            }
+        }
+    }
+
+    private bool IsWallTile(TileType tile)
+    {
+        return tile == TileType.Ground ||
+               tile == TileType.WallCenter ||
+               tile == TileType.WallTop ||
+               tile == TileType.WallBottom ||
+               tile == TileType.WallLeft ||
+               tile == TileType.WallRight ||
+               tile == TileType.WallTopLeftCorner ||
+               tile == TileType.WallTopRightCorner ||
+               tile == TileType.WallBottomLeftCorner ||
+               tile == TileType.WallBottomRightCorner ||
+               tile == TileType.WallPointLeft ||
+               tile == TileType.WallPointRight ||
+               tile == TileType.WallPointUp ||
+               tile == TileType.WallPointDown||
+               tile == TileType.WallSideways||
+               tile == TileType.WallUpwards;;
+    }
+    
     private void Generate2DSideScrollingTerrainWithRL()
     {
         List<(GeneratorState, GeneratorAction)> episode = new();
@@ -2589,10 +2912,62 @@ public class RLLevelTrainer : MonoBehaviour
                     case TileType.Ground:
                         Instantiate(GroundBlock, position, Quaternion.identity, BlockParent);
                         break;
-
+                    
+                    case TileType.GroundMiddle:
+                        Instantiate(GroundMiddleBlock, position, Quaternion.identity, BlockParent);
+                        break;
+                    case TileType.GroundSurface:
+                        Instantiate(GroundTopMiddleBlock, position, Quaternion.identity, BlockParent);
+                        break;
+                                
+                    case TileType.GroundTopLeftCorner:
+                        Instantiate(GroundTopLeftCornerBlock, position, Quaternion.identity, BlockParent);
+                        break;
+                                
+                    case TileType.GroundTopRightCorner:
+                        Instantiate(GroundTopRightCornerBlock, position, Quaternion.identity, BlockParent);
+                        break;
+                                
+                    case TileType.GroundBottom:
+                        Instantiate(GroundBottomMiddleBlock, position, Quaternion.identity, BlockParent);
+                        break;
+                                
+                    case TileType.GroundLeftEdge:
+                        Instantiate(GroundMiddleLeftBlock, position, Quaternion.identity, BlockParent);
+                        break;
+                                
+                    case TileType.GroundRightEdge:
+                        Instantiate(GroundMiddleRightBlock, position, Quaternion.identity, BlockParent);
+                        break;
+                                
+                    case TileType.GroundBottomLeftCorner:
+                        Instantiate(GroundBottomLeftCornerBlock, position, Quaternion.identity, BlockParent);
+                        break;
+                                
+                    case TileType.GroundBottomRightCorner:
+                        Instantiate(GroundBottomRightCornerBlock, position, Quaternion.identity, BlockParent);
+                        break;
+                    
+                    case TileType.GroundPeakPoint:
+                        Instantiate(GroundPointUpBlock, position, Quaternion.identity, BlockParent);
+                        break;
+                    
                     case TileType.Platform:
                         Instantiate(PlatformBlock, position, Quaternion.identity, BlockParent);
                         break;
+                    
+                    case TileType.PlatformMiddle:
+                        Instantiate(PlatformMiddleBlock, position, Quaternion.identity, BlockParent);
+                        break;
+                    
+                    case TileType.PlatformLeftEdge:
+                        Instantiate(PlatformLeftBlock, position, Quaternion.identity, BlockParent);
+                        break;
+                    
+                    case TileType.PlatformRightEdge:
+                        Instantiate(PlatformRightBlock, position, Quaternion.identity, BlockParent);
+                        break;
+                    
                 }
 
                 switch (_decorationGrid[x, y])
@@ -2602,6 +2977,87 @@ public class RLLevelTrainer : MonoBehaviour
                         break;
                     case TileType.EdgeRight:
                         Instantiate(RightEdgeTrigger, position, Quaternion.identity, EdgeParent);
+                        break;
+                }
+            }
+        }
+    }
+    
+    private void InstantiateTopDownBlocks()
+    {
+        if(DoNotInstantiate) return;
+        
+        if (_tileGrid == null) return;
+        
+        for (int x = 0; x < LevelWidth; x++)
+        {
+            for (int y = 0; y < LevelHeight; y++)
+            {
+                Vector3 position = new Vector3(x * BlockSize, y * BlockSize, 0);
+
+                switch (_tileGrid[x, y])
+                {
+                    case TileType.Ground:
+                        Instantiate(GroundBlock, position, Quaternion.identity, BlockParent);
+                        break;
+                    
+                    case TileType.WallCenter:
+                        Instantiate(GroundMiddleBlock, position, Quaternion.identity, BlockParent);
+                        break;
+                    case TileType.WallTop:
+                        Instantiate(GroundTopMiddleBlock, position, Quaternion.identity, BlockParent);
+                        break;
+                                
+                    case TileType.WallTopLeftCorner:
+                        Instantiate(GroundTopLeftCornerBlock, position, Quaternion.identity, BlockParent);
+                        break;
+                                
+                    case TileType.WallTopRightCorner:
+                        Instantiate(GroundTopRightCornerBlock, position, Quaternion.identity, BlockParent);
+                        break;
+                                
+                    case TileType.WallBottom:
+                        Instantiate(GroundBottomMiddleBlock, position, Quaternion.identity, BlockParent);
+                        break;
+                                
+                    case TileType.WallLeft:
+                        Instantiate(GroundMiddleLeftBlock, position, Quaternion.identity, BlockParent);
+                        break;
+                                
+                    case TileType.WallRight:
+                        Instantiate(GroundMiddleRightBlock, position, Quaternion.identity, BlockParent);
+                        break;
+                                
+                    case TileType.WallBottomLeftCorner:
+                        Instantiate(GroundBottomLeftCornerBlock, position, Quaternion.identity, BlockParent);
+                        break;
+                                
+                    case TileType.WallBottomRightCorner:
+                        Instantiate(GroundBottomRightCornerBlock, position, Quaternion.identity, BlockParent);
+                        break;
+                    
+                    case TileType.WallPointUp:
+                        Instantiate(GroundPointUpBlock, position, Quaternion.identity, BlockParent);
+                        break;
+                    
+                    case TileType.WallPointDown:
+                        Instantiate(GroundPointDownBlock, position, Quaternion.identity, BlockParent);
+                        break;
+                    
+                    case TileType.WallPointLeft:
+                        Instantiate(GroundPointLeftBlock, position, Quaternion.identity, BlockParent);
+                        break;
+                    
+                    case TileType.WallPointRight:
+                        Instantiate(GroundPointRightBlock, position, Quaternion.identity, BlockParent);
+                        break;
+                    
+                    case TileType.WallSideways:
+                        Instantiate(GroundSidewaysBlock, position, Quaternion.identity, BlockParent);
+                        break;
+                    
+                    case TileType.WallUpwards:
+                        Instantiate(GroundUpwardsBlock, position, Quaternion.identity, BlockParent);
                         break;
                 }
             }
@@ -3006,55 +3462,267 @@ public class RLLevelTrainer : MonoBehaviour
         if (_tileGrid == null) return;
 
         Vector3 blockSizeVector = new Vector3(1, 1, 0);
-        
+
+        switch (ShowTilesetInfo)
+        {
+            case true: 
+                for (int x = 0; x < LevelWidth; x++)
+                {
+                    for (int y = 0; y < LevelHeight; y++)
+                    {
+                        Vector3 position = new Vector3(x, y, 0);
+
+                        switch (_tileGrid[x, y])
+                        {
+                            case TileType.Ground:
+                                Gizmos.color = Color.green;
+                                break;
+                            
+                            case TileType.GroundMiddle:
+                                Gizmos.color = Color.green;
+                                break;
+                            
+                            case TileType.WallCenter:
+                                Gizmos.color = Color.green;
+                                break;
+                            
+                            case TileType.GroundSurface:
+                                Gizmos.color = new Color(.73f, .92f, .2f);
+                                break;
+                            
+                            case TileType.WallTop:
+                                Gizmos.color = new Color(.73f, .92f, .2f);
+                                break;
+                            
+                            case TileType.GroundTopLeftCorner:
+                                Gizmos.color = new Color(.92f, .6f, .2f);
+                                break;
+                            
+                            case TileType.WallTopLeftCorner:
+                                Gizmos.color = new Color(.92f, .6f, .2f);
+                                break;
+                            
+                            case TileType.GroundTopRightCorner:
+                                Gizmos.color = new Color(.46f, .26f, .2f);
+                                break;
+                            
+                            case TileType.WallTopRightCorner:
+                                Gizmos.color = new Color(.46f, .26f, .2f);
+                                break;
+                            
+                            case TileType.GroundBottom:
+                                Gizmos.color = new Color(.59f, .2f, .92f);
+                                break;
+                            
+                            case TileType.WallBottom:
+                                Gizmos.color = new Color(.59f, .2f, .92f);
+                                break;
+                            
+                            case TileType.GroundLeftEdge:
+                                Gizmos.color = new Color(.2f, .29f, .92f);
+                                break;
+                            
+                            case TileType.WallLeft:
+                                Gizmos.color = new Color(.2f, .29f, .92f);
+                                break;
+                            
+                            case TileType.GroundRightEdge:
+                                Gizmos.color = new Color(.92f, .25f, .53f);
+                                break;
+                            
+                            case TileType.WallRight:
+                                Gizmos.color = new Color(.92f, .25f, .53f);
+                                break;
+                            
+                            case TileType.GroundBottomLeftCorner:
+                                Gizmos.color = new Color(.2f, .92f, .92f);
+                                break;
+                            
+                            case TileType.WallBottomLeftCorner:
+                                Gizmos.color = new Color(.2f, .92f, .92f);
+                                break;
+                            
+                            case TileType.GroundBottomRightCorner:
+                                Gizmos.color = new Color(.29f, .26f, .46f);
+                                break;
+                            
+                            case TileType.WallBottomRightCorner:
+                                Gizmos.color = new Color(.29f, .26f, .46f);
+                                break;
+                            
+                            case TileType.GroundPeakPoint:
+                                Gizmos.color = new Color(.29f, .4f, .1f);
+                                break;
+                            
+                            case TileType.WallPointDown:
+                                Gizmos.color = new Color(.29f, .4f, .1f);
+                                break;
+
+                            case TileType.Platform:
+                                Gizmos.color = Color.yellow;
+                                break;
+                            
+                            case TileType.PlatformMiddle:
+                                Gizmos.color = Color.yellow;
+                                break;
+                            
+                            case TileType.WallSideways:
+                                Gizmos.color = Color.yellow;
+                                break;
+                            
+                            case TileType.PlatformLeftEdge:
+                                Gizmos.color = new Color(1f, .7f, .2f);
+                                break;
+                            
+                            case TileType.WallUpwards:
+                                Gizmos.color = new Color(1f, .7f, .2f);
+                                break;
+                            
+                            case TileType.PlatformRightEdge:
+                                Gizmos.color = new Color(1f, .7f, .7f);
+                                break;
+                            
+                            case TileType.WallAlone:
+                                Gizmos.color = new Color(1f, .7f, .7f);
+                                break;
+                            
+                            case TileType.Enemy:
+                                Gizmos.color = Color.magenta;
+                                break;
+                            
+                            case TileType.Coin:
+                                Gizmos.color = Color.red;
+                                break;
+                            
+                            case TileType.Pickup:
+                                Gizmos.color = Color.white;
+                                break;
+                            
+                            case TileType.Hazard:
+                                Gizmos.color = Color.black;
+                                break;
+
+                            default:
+                                Gizmos.color = Color.gray;
+                                break;
+                        }
+
+                        Gizmos.DrawCube(position, blockSizeVector * 0.9f);
+                    }
+                }
+                break;
+                
+                case false:
+                    for (int x = 0; x < LevelWidth; x++)
+                    {
+                        for (int y = 0; y < LevelHeight; y++)
+                        {
+                            Vector3 position = new Vector3(x, y, 0);
+
+                            switch (_tileGrid[x, y])
+                            {
+                                case TileType.Ground:
+                                    Gizmos.color = Color.green;
+                                    break;
+                                
+                                case TileType.GroundMiddle:
+                                    Gizmos.color = Color.green;
+                                    break;
+                                case TileType.GroundSurface:
+                                    Gizmos.color = Color.green;
+                                    break;
+                                
+                                case TileType.GroundTopLeftCorner:
+                                    Gizmos.color = Color.green;
+                                    break;
+                                
+                                case TileType.GroundTopRightCorner:
+                                    Gizmos.color = Color.green;
+                                    break;
+                                
+                                case TileType.GroundBottom:
+                                    Gizmos.color = Color.green;
+                                    break;
+                                
+                                case TileType.GroundLeftEdge:
+                                    Gizmos.color = Color.green;
+                                    break;
+                                
+                                case TileType.GroundRightEdge:
+                                    Gizmos.color = Color.green;
+                                    break;
+                                
+                                case TileType.GroundBottomLeftCorner:
+                                    Gizmos.color = Color.green;
+                                    break;
+                                
+                                case TileType.GroundBottomRightCorner:
+                                    Gizmos.color = Color.green;
+                                    break;
+                                
+                                case TileType.GroundPeakPoint:
+                                    Gizmos.color = Color.green;
+                                    break;
+
+                                case TileType.Platform:
+                                    Gizmos.color = Color.yellow;
+                                    break;
+                                
+                                case TileType.PlatformMiddle:
+                                    Gizmos.color = Color.yellow;
+                                    break;
+                                
+                                case TileType.PlatformLeftEdge:
+                                    Gizmos.color = Color.yellow;
+                                    break;
+                            
+                                case TileType.PlatformRightEdge:
+                                    Gizmos.color = Color.yellow;
+                                    break;
+
+                                case TileType.Enemy:
+                                    Gizmos.color = Color.magenta;
+                                    break;
+                                
+                                case TileType.Coin:
+                                    Gizmos.color = Color.red;
+                                    break;
+                                
+                                case TileType.Pickup:
+                                    Gizmos.color = Color.white;
+                                    break;
+                                
+                                case TileType.Hazard:
+                                    Gizmos.color = Color.black;
+                                    break;
+
+                                default:
+                                    Gizmos.color = Color.gray;
+                                    break;
+                            }
+
+                            Gizmos.DrawCube(position, blockSizeVector * 0.9f);
+                        }
+                    }
+                    break;
+        }
+
         for (int x = 0; x < LevelWidth; x++)
         {
             for (int y = 0; y < LevelHeight; y++)
             {
                 Vector3 position = new Vector3(x, y, 0);
-
-                switch (_tileGrid[x, y])
-                {
-                    case TileType.Ground:
-                        Gizmos.color = Color.green;
-                        break;
-
-                    case TileType.Platform:
-                        Gizmos.color = Color.yellow;
-                        break;
-
-                    case TileType.Enemy:
-                        Gizmos.color = Color.magenta;
-                        break;
-                    
-                    case TileType.Coin:
-                        Gizmos.color = Color.red;
-                        break;
-                    
-                    case TileType.Pickup:
-                        Gizmos.color = Color.white;
-                        break;
-                    
-                    case TileType.Hazard:
-                        Gizmos.color = Color.black;
-                        break;
-
-                    default:
-                        Gizmos.color = Color.gray;
-                        break;
-                }
-
                 switch (_decorationGrid[x, y])
                 {
                     case TileType.EdgeLeft:
                         Gizmos.color = Color.blue;
+                        Gizmos.DrawSphere(position,0.4f);
                         break;
                     case TileType.EdgeRight:
                         Gizmos.color = Color.cyan;
+                        Gizmos.DrawSphere(position,0.4f);
                         break;
                 }
-
-                Gizmos.DrawCube(position, blockSizeVector * 0.9f);
             }
         }
     }

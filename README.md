@@ -605,4 +605,7 @@ limitations under the License.
 **Created by:** Afonso Costa
 [20210584@iade.pt](mailto:20210584@iade.pt)
 
+Dirt & Grass 2D Platform Tileset by AxulArt - https://axulart.itch.io/dirt-and-grass-2d-platform-tileset
+Chocolate Bar Tileset by UchiMama1 - https://uchimama.itch.io/2d-chocolate-tilesets
+
 For questions or suggestions, please contact the project maintainer.

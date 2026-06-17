@@ -96,7 +96,7 @@ Navigate to https://github.com/ItsYaBoiBirdMan/RL-2D-Level-Generator/releases/ta
 Ensure all required scripts are present in your project:
 
 ```
-Assets/Scripts/
+Assets/Scripts/RL
 ├── GeneratorAction.cs
 ├── GeneratorState.cs
 ├── RLGeneratorAgent.cs
@@ -104,6 +104,9 @@ Assets/Scripts/
 ├── PlayerPerformanceTracker.cs
 ├── EnemyDifficultyAdjuster.cs
 └── TileType.cs
+Editor/
+├── CustomRLLevelTrainerInspector.cs
+
 ```
 
 ### Step 2: Create Main Trainer Object

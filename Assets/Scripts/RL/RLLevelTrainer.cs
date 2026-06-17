@@ -3672,7 +3672,71 @@ public class RLLevelTrainer : MonoBehaviour
                                 case TileType.GroundPeakPoint:
                                     Gizmos.color = Color.green;
                                     break;
-
+                                
+                                case TileType.WallCenter:
+                                    Gizmos.color = Color.green;
+                                    break;
+                                
+                                case TileType.WallTop:
+                                    Gizmos.color = Color.green;
+                                    break;
+                                
+                                case TileType.WallTopLeftCorner:
+                                    Gizmos.color = Color.green;
+                                    break;
+                                
+                                case TileType.WallTopRightCorner:
+                                    Gizmos.color = Color.green;
+                                    break;
+                                
+                                case TileType.WallBottomLeftCorner:
+                                    Gizmos.color = Color.green;
+                                    break;
+                                
+                                case TileType.WallBottomRightCorner:
+                                    Gizmos.color = Color.green;
+                                    break;
+                                
+                                case TileType.WallLeft:
+                                    Gizmos.color = Color.green;
+                                    break;
+                                
+                                case TileType.WallRight:
+                                    Gizmos.color = Color.green;
+                                    break;
+                                
+                                case TileType.WallBottom:
+                                    Gizmos.color = Color.green;
+                                    break;
+                                
+                                case TileType.WallUpwards:
+                                    Gizmos.color = Color.green;
+                                    break;
+                                
+                                case TileType.WallSideways:
+                                    Gizmos.color = Color.green;
+                                    break;
+                                
+                                case TileType.WallAlone:
+                                    Gizmos.color = Color.green;
+                                    break;
+                                
+                                case TileType.WallPointDown:
+                                    Gizmos.color = Color.green;
+                                    break;
+                                
+                                case TileType.WallPointLeft:
+                                    Gizmos.color = Color.green;
+                                    break;
+                                
+                                case TileType.WallPointRight:
+                                    Gizmos.color = Color.green;
+                                    break;
+                                
+                                case TileType.WallPointUp:
+                                    Gizmos.color = Color.green;
+                                    break;
+                                
                                 case TileType.Platform:
                                     Gizmos.color = Color.yellow;
                                     break;

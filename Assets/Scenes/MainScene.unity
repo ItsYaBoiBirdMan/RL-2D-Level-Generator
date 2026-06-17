@@ -765,7 +765,7 @@ MonoBehaviour:
   ConsecutiveWins: 0
   ConsecutiveLosses: 0
   DifficultyIncrement: 0.2
-  Difficulty: 0
+  Difficulty: 0.67
 --- !u!4 &1364505383
 Transform:
   m_ObjectHideFlags: 0
@@ -811,13 +811,42 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   PlayerPerformanceTracker: {fileID: 1364505382}
-  LevelWidth: 25
-  LevelHeight: 25
+  LevelWidth: 50
+  LevelHeight: 50
   TrainingEpisodes: 1000
-  BlockSize: 1
   Difficulty: 1
-  GroundBlock: {fileID: 7007706582669186652, guid: f717ae4c48d391b4da1be5c12f0d29b6, type: 3}
+  SideScrollerGroundBlock: {fileID: 7007706582669186652, guid: ab52b950165d3e245a73e95e5feb44ed, type: 3}
+  SideScrollerGroundMiddleBlock: {fileID: 7007706582669186652, guid: ab52b950165d3e245a73e95e5feb44ed, type: 3}
+  SideScrollerGroundTopLeftCornerBlock: {fileID: 7007706582669186652, guid: fd0b192d999e4414cab56a33cee7cd67, type: 3}
+  SideScrollerGroundTopRightCornerBlock: {fileID: 7007706582669186652, guid: 5814011dad38c2e4da5d39cb07482da2, type: 3}
+  SideScrollerGroundTopMiddleBlock: {fileID: 7007706582669186652, guid: 3545183292f3c8940990a4a12ccab114, type: 3}
+  SideScrollerGroundBottomMiddleBlock: {fileID: 7007706582669186652, guid: f2b5c883f16239745bf7ee31af145a8f, type: 3}
+  SideScrollerGroundBottomLeftCornerBlock: {fileID: 7007706582669186652, guid: c2f8e86ba66b64d4abb7fd6c7e8850f4, type: 3}
+  SideScrollerGroundBottomRightCornerBlock: {fileID: 7007706582669186652, guid: b215650053a843e4084f9ee4e949e641, type: 3}
+  SideScrollerGroundMiddleLeftBlock: {fileID: 7007706582669186652, guid: 42f7ba9cb74a419449f02ff8fd905714, type: 3}
+  SideScrollerGroundMiddleRightBlock: {fileID: 7007706582669186652, guid: 1ee963d46fc55044589b2411e5c82549, type: 3}
+  SideScrollerGroundPeakPointBlock: {fileID: 7007706582669186652, guid: 1e5f4c897a9246c4c8d35aacb0401b6c, type: 3}
+  TopDownGroundBlock: {fileID: 7007706582669186652, guid: ab52b950165d3e245a73e95e5feb44ed, type: 3}
+  TopDownGroundMiddleBlock: {fileID: 7007706582669186652, guid: ab52b950165d3e245a73e95e5feb44ed, type: 3}
+  TopDownGroundTopLeftCornerBlock: {fileID: 7007706582669186652, guid: fd0b192d999e4414cab56a33cee7cd67, type: 3}
+  TopDownGroundTopRightCornerBlock: {fileID: 7007706582669186652, guid: 5814011dad38c2e4da5d39cb07482da2, type: 3}
+  TopDownGroundTopMiddleBlock: {fileID: 7007706582669186652, guid: 3545183292f3c8940990a4a12ccab114, type: 3}
+  TopDownGroundBottomMiddleBlock: {fileID: 7007706582669186652, guid: f2b5c883f16239745bf7ee31af145a8f, type: 3}
+  TopDownGroundBottomLeftCornerBlock: {fileID: 7007706582669186652, guid: c2f8e86ba66b64d4abb7fd6c7e8850f4, type: 3}
+  TopDownGroundBottomRightCornerBlock: {fileID: 7007706582669186652, guid: b215650053a843e4084f9ee4e949e641, type: 3}
+  TopDownGroundMiddleLeftBlock: {fileID: 7007706582669186652, guid: 42f7ba9cb74a419449f02ff8fd905714, type: 3}
+  TopDownGroundMiddleRightBlock: {fileID: 7007706582669186652, guid: 1ee963d46fc55044589b2411e5c82549, type: 3}
+  TopDownGroundPointUpBlock: {fileID: 7007706582669186652, guid: 1e5f4c897a9246c4c8d35aacb0401b6c, type: 3}
+  TopDownGroundPointDownBlock: {fileID: 7007706582669186652, guid: f953fc869c29b654d8122269a5540bf3, type: 3}
+  TopDownGroundPointLeftBlock: {fileID: 7007706582669186652, guid: f7fa57b1648106e4fb93f11e479e1cc6, type: 3}
+  TopDownGroundPointRightBlock: {fileID: 7007706582669186652, guid: 7ec3223d8f16afd48ac38b05fdb6b837, type: 3}
+  TopDownGroundAloneBlock: {fileID: 7007706582669186652, guid: e58e2f78cc53f7644af817228fec3729, type: 3}
+  TopDownGroundSidewaysBlock: {fileID: 7007706582669186652, guid: 2ced16d2a3929904c876d13b04feeb82, type: 3}
+  TopDownGroundUpwardsBlock: {fileID: 7007706582669186652, guid: 1559ee8bc83519947b472d0543b52876, type: 3}
   PlatformBlock: {fileID: 7007706582669186652, guid: a3039b8201e29b24fa2f5585786c33dc, type: 3}
+  PlatformMiddleBlock: {fileID: 7007706582669186652, guid: 3dd6a8feb0b468a46af8ee6f694ceab6, type: 3}
+  PlatformLeftBlock: {fileID: 7007706582669186652, guid: ddcce83680b0a3345ab7518c3b19762f, type: 3}
+  PlatformRightBlock: {fileID: 7007706582669186652, guid: d3d54cb955bc57c4c979339407f89578, type: 3}
   LeftEdgeTrigger: {fileID: 7007706582669186652, guid: bb0d987d331b1e24b9905690dcef895a, type: 3}
   RightEdgeTrigger: {fileID: 7007706582669186652, guid: b13bdde788ea0d14c9e8b70e6ee7bb0a, type: 3}
   SideScrollingEnemyPerfab: {fileID: 4983974186299711412, guid: b102dfce0dd09b147b5f446977a80ab9, type: 3}
@@ -834,7 +863,7 @@ MonoBehaviour:
   SideScrollerPlayer: {fileID: 1834973776}
   TopDownPlayer: {fileID: 1248383117}
   generationMode: 0
-  haveEnemies: 1
+  haveEnemies: 0
   havePlatforms: 0
   platformDifficultyRelation: 1
   MinPlatformHeightFromGround: 4
@@ -844,6 +873,7 @@ MonoBehaviour:
   haveCoins: 0
   haveEnemyScaling: 0
   DoNotInstantiate: 0
+  ShowTilesetInfo: 1
 --- !u!4 &1400187117
 Transform:
   m_ObjectHideFlags: 0

@@ -26,21 +26,14 @@ public class RLLevelTrainer : MonoBehaviour
         MoreOnHigherDifficulty,
         MoreOnLowerDifficulty
     }
-
-    [Header("PLAYER PERFORMANCE TRACKER")] 
-    [SerializeField] private PlayerPerformanceTracker PlayerPerformanceTracker;
     
-    [Header("BASIC SETTINGS")]
+    [SerializeField] private PlayerPerformanceTracker PlayerPerformanceTracker;
     
     [SerializeField] private int LevelWidth = 150;
     [SerializeField] private int LevelHeight = 50;
     [SerializeField] private int TrainingEpisodes = 500;
-
     [SerializeField] private float Difficulty;
     
-    [Header("PREFABS")] 
-    [Space]
-    [Header("Side-Scroller Ground Blocks")] 
     [SerializeField] private GameObject SideScrollerGroundBlock;
     [SerializeField] private GameObject SideScrollerGroundMiddleBlock;
     [SerializeField] private GameObject SideScrollerGroundTopLeftCornerBlock;
@@ -53,8 +46,6 @@ public class RLLevelTrainer : MonoBehaviour
     [SerializeField] private GameObject SideScrollerGroundMiddleRightBlock;
     [SerializeField] private GameObject SideScrollerGroundPeakPointBlock;
     
-    
-    [Header("Top-Down Ground Blocks")] 
     [SerializeField] private GameObject TopDownGroundBlock;
     [SerializeField] private GameObject TopDownGroundMiddleBlock;
     [SerializeField] private GameObject TopDownGroundTopLeftCornerBlock;
@@ -73,41 +64,36 @@ public class RLLevelTrainer : MonoBehaviour
     [SerializeField] private GameObject TopDownGroundSidewaysBlock;
     [SerializeField] private GameObject TopDownGroundUpwardsBlock;
     
-    
-    [Header("Platform Blocks")]
     [SerializeField] private GameObject PlatformBlock;
     [SerializeField] private GameObject PlatformMiddleBlock;
     [SerializeField] private GameObject PlatformLeftBlock;
     [SerializeField] private GameObject PlatformRightBlock;
     
-    [Header("Edge Triggers")]
     [SerializeField] private GameObject LeftEdgeTrigger;
     [SerializeField] private GameObject RightEdgeTrigger;
     
-    [Header("Enemy Prefabs")]
     [SerializeField] private GameObject SideScrollingEnemyPerfab;
     [SerializeField] private GameObject TopDownEnemyPerfab;
     
-    [Header("Level Component Prefabs")]
+    [SerializeField] private List<EnemyObject> sideScrollingEnemyObjectsList;
+    [SerializeField] private List<EnemyObject> topDownEnemyObjectsList;
+    
     [SerializeField] private GameObject CoinPrefab;
     [SerializeField] private GameObject PickupPrefab;
     [SerializeField] private GameObject HazardPrefab;
     [SerializeField] private GameObject DeathPlane;
-    
-    [Header("OBJECT PARENTS")]
     [SerializeField] private Transform BlockParent;
     [SerializeField] private Transform EdgeParent;
     [SerializeField] private Transform EnemyParent;
     [SerializeField] private Transform CoinParent;
     [SerializeField] private Transform HazardParent;
-    
-    [Header("PLAYER OBJECTS")]
     [SerializeField] private GameObject SideScrollerPlayer;
     [SerializeField] private GameObject TopDownPlayer;
-
-    [Header("GENERATION SETTINGS")] 
+    
     [SerializeField] private GenerationMode generationMode;
     [SerializeField] private bool haveEnemies;
+    [SerializeField] private bool haveVariousEnemiesSpawnBasedOnDifficulty;
+    [SerializeField] private bool haveEnemyScaling;
     [SerializeField] private bool havePlatforms;
     [SerializeField] private PlatformDifficultyRelation platformDifficultyRelation;
     [SerializeField] private int MinPlatformHeightFromGround = 4;
@@ -115,11 +101,11 @@ public class RLLevelTrainer : MonoBehaviour
     [SerializeField] private bool havePickups;
     [SerializeField] private bool haveHazards;
     [SerializeField] private bool haveCoins;
-    [SerializeField] private bool haveEnemyScaling;
-
-    [Header("DEBUG")] 
+    
     [SerializeField] private bool DoNotInstantiate;
     [SerializeField] private bool ShowTilesetInfo;
+    
+    private List<EnemyObject> _allowedEnemies;
     
     private TileType[,] _tileGrid;
     private TileType[,] _decorationGrid;
@@ -149,6 +135,7 @@ public class RLLevelTrainer : MonoBehaviour
     
     public void FlexibleGeneratorFunction()
     {
+        _allowedEnemies = new List<EnemyObject>();
         _blockSize = SideScrollerGroundMiddleBlock.transform.localScale.x;
         Difficulty = PlayerPerformanceTracker.Instance.Difficulty;
         _tileGrid = new TileType[LevelWidth, LevelHeight];
@@ -244,7 +231,15 @@ public class RLLevelTrainer : MonoBehaviour
                 Debug.Log("Coin count: " + _coinCount);
         
                 InstantiateBlocks();
-                InstantiateEnemies();
+
+                if (!haveVariousEnemiesSpawnBasedOnDifficulty)
+                {
+                    InstantiateEnemies();
+                }
+                else
+                {
+                    InstantiateEnemyScriptableObjectsBasedOnDifficulty();
+                }
                 InstantiateHazards();
                 PlaceDeathPlane();
                 InstantiatePickups();
@@ -305,7 +300,14 @@ public class RLLevelTrainer : MonoBehaviour
                 Debug.Log("Coin count: " + _coinCount);
         
                 InstantiateTopDownBlocks();
-                InstantiateEnemies();
+                if (!haveVariousEnemiesSpawnBasedOnDifficulty)
+                {
+                    InstantiateEnemies();
+                }
+                else
+                {
+                    InstantiateEnemyScriptableObjectsBasedOnDifficulty();
+                }
                 InstantiateHazards();
                 InstantiatePickups();
         
@@ -3339,8 +3341,62 @@ public class RLLevelTrainer : MonoBehaviour
         {
             foreach (var e in enemyList)
             {
-                AdjustEnemyDifficulty(e.GetComponent<EnemyDifficultyAdjuster>());
+                EnemyDifficultyAdjuster eda = e.GetComponent<EnemyDifficultyAdjuster>();
+                if (eda != null) AdjustEnemyDifficulty(e.GetComponent<EnemyDifficultyAdjuster>());
+                else Debug.Log("No EnemyDifficultyAdjuster component found! Please verify that it is attached to you enemy prefab");
             }
+        }
+    }
+    
+    private void InstantiateEnemyScriptableObjectsBasedOnDifficulty()
+    {
+        if(DoNotInstantiate) return;
+        
+        if (_tileGrid == null) return;
+
+        List<GameObject> enemyList = new List<GameObject>();
+        
+        switch (generationMode)
+        {
+            case GenerationMode.SideScroller:
+
+                foreach (var enemy in sideScrollingEnemyObjectsList)
+                {
+                    if (enemy.MinimumDifficultyAllowed <= Difficulty && enemy.MaximumDifficultyAllowed >= Difficulty)
+                    {
+                        _allowedEnemies.Add(enemy);
+                    }
+                }
+                
+                for (int x = 0; x < LevelWidth; x++)
+                {
+                    for (int y = 0; y < LevelHeight; y++)
+                    {
+                        Vector3 position = new Vector3(x * _blockSize, y * _blockSize, 0);
+                        int rng = Random.Range(0, _allowedEnemies.Count);
+                        if (_tileGrid[x, y] == TileType.Enemy && generationMode == GenerationMode.SideScroller) enemyList.Add(Instantiate(_allowedEnemies[rng].EnemyPrefab, position, Quaternion.identity, EnemyParent));
+                    }
+                }
+                break;
+                    
+            case GenerationMode.TopDown:
+                foreach (var enemy in topDownEnemyObjectsList)
+                {
+                    if (enemy.MinimumDifficultyAllowed <= Difficulty && enemy.MaximumDifficultyAllowed >= Difficulty)
+                    {
+                        _allowedEnemies.Add(enemy);
+                    }
+                }
+                for (int x = 0; x < LevelWidth; x++)
+                {
+                    for (int y = 0; y < LevelHeight; y++)
+                    {
+                        Vector3 position = new Vector3(x * _blockSize, y * _blockSize, 0);
+                        int rng = Random.Range(0, _allowedEnemies.Count);
+                        if (_tileGrid[x, y] == TileType.Enemy && generationMode == GenerationMode.TopDown) enemyList.Add(Instantiate(_allowedEnemies[rng].EnemyPrefab, position, Quaternion.identity, EnemyParent));
+                    }
+                }
+                break;
         }
     }
     

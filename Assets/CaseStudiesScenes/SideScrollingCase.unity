@@ -765,7 +765,7 @@ MonoBehaviour:
   ConsecutiveWins: 0
   ConsecutiveLosses: 0
   DifficultyIncrement: 0.2
-  Difficulty: 0.66
+  Difficulty: 0.67
 --- !u!4 &1364505383
 Transform:
   m_ObjectHideFlags: 0
@@ -874,15 +874,15 @@ MonoBehaviour:
   TopDownPlayer: {fileID: 1248383117}
   generationMode: 0
   haveEnemies: 0
-  haveVariousEnemiesSpawnBasedOnDifficulty: 0
+  haveVariousEnemiesSpawnBasedOnDifficulty: 1
   haveEnemyScaling: 0
   havePlatforms: 1
   platformDifficultyRelation: 0
   MinPlatformHeightFromGround: 4
   MaxPlatformHeightFromGround: 10
   havePickups: 0
-  haveHazards: 0
-  haveCoins: 0
+  haveHazards: 1
+  haveCoins: 1
   DoNotInstantiate: 0
   ShowTilesetInfo: 1
 --- !u!4 &1400187117
@@ -1086,7 +1086,7 @@ Camera:
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 1
-  m_BackGroundColor: {r: 0.3517711, g: 0.6868905, b: 0.8018868, a: 0}
+  m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0
@@ -1180,7 +1180,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1986830963
 MonoBehaviour:
   m_ObjectHideFlags: 0

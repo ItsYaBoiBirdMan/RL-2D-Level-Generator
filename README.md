@@ -237,6 +237,7 @@ Configure the following flags in **Generation Settings**:
 | Have Pickups | Enable/disable health items | Affects survival difficulty |
 | Have Hazards | Enable/disable obstacle placement | Increases challenge |
 | Have Coins | Enable/disable collectibles | Affects exploration incentive |
+| Have Various Enemies Spawn Based On Difficulty | Have different enemy object spawn based on the difficulty | Keeps challenge balanced |
 | Have Enemy Scaling | Scale enemies with difficulty | Keeps challenge balanced |
 | Platform Difficulty Relation | Platform density vs difficulty | "More on Higher" or vice versa |
 | Min/Max Platform Height | Platform range from ground | Align with jump mechanics |

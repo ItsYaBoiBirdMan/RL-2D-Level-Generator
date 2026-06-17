@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 26043fa129e44b2479ddd2ce4015c97e, type: 3}
   m_Name: Enemy 4
   m_EditorClassIdentifier: 
-  EnemyPrefab: {fileID: 4983974186299711412, guid: 0a385f5da2f1162489f39202c4c64519, type: 3}
+  EnemyPrefab: {fileID: 4983974186299711412, guid: 2149fb89939e01f48b369c4c8974abfc, type: 3}
   MinimumDifficultyAllowed: 0.75
   MaximumDifficultyAllowed: 1

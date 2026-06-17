@@ -765,7 +765,7 @@ MonoBehaviour:
   ConsecutiveWins: 0
   ConsecutiveLosses: 0
   DifficultyIncrement: 0.2
-  Difficulty: 0.67
+  Difficulty: 0.66
 --- !u!4 &1364505383
 Transform:
   m_ObjectHideFlags: 0
@@ -811,7 +811,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   PlayerPerformanceTracker: {fileID: 1364505382}
-  LevelWidth: 50
+  LevelWidth: 150
   LevelHeight: 50
   TrainingEpisodes: 1000
   Difficulty: 1
@@ -851,6 +851,16 @@ MonoBehaviour:
   RightEdgeTrigger: {fileID: 7007706582669186652, guid: b13bdde788ea0d14c9e8b70e6ee7bb0a, type: 3}
   SideScrollingEnemyPerfab: {fileID: 4983974186299711412, guid: b102dfce0dd09b147b5f446977a80ab9, type: 3}
   TopDownEnemyPerfab: {fileID: 4983974186299711412, guid: feb5e11af913b54458b3d4b324330e0c, type: 3}
+  sideScrollingEnemyObjectsList:
+  - {fileID: 11400000, guid: ca252e1ab830b664da5e0d1f1f6b4dc4, type: 2}
+  - {fileID: 11400000, guid: 9470c081297de154589e624a109a31eb, type: 2}
+  - {fileID: 11400000, guid: 6ac8c3cd729b3a7439e937635772a47c, type: 2}
+  - {fileID: 11400000, guid: c063478ebdf580a4abec57282c4a1270, type: 2}
+  topDownEnemyObjectsList:
+  - {fileID: 11400000, guid: 4f872fdcae956ea4db0f384bef052d3c, type: 2}
+  - {fileID: 11400000, guid: 4860b98d0b46cde4da0bb80d8e44f555, type: 2}
+  - {fileID: 11400000, guid: 9f4efda802847e544b1d1ec9d68da273, type: 2}
+  - {fileID: 11400000, guid: 9ed5908ee3d29d74b8d4af5edb4679b9, type: 2}
   CoinPrefab: {fileID: 7997172044501660143, guid: 616755733f452a34d87632ded381f4df, type: 3}
   PickupPrefab: {fileID: 7997172044501660143, guid: ab25483c67fb2c445aff50d7733791d1, type: 3}
   HazardPrefab: {fileID: 7007706582669186652, guid: 8fb70375553ff534aaa3707d29e173c8, type: 3}
@@ -863,15 +873,16 @@ MonoBehaviour:
   SideScrollerPlayer: {fileID: 1834973776}
   TopDownPlayer: {fileID: 1248383117}
   generationMode: 0
-  haveEnemies: 0
-  havePlatforms: 0
-  platformDifficultyRelation: 1
+  haveEnemies: 1
+  haveVariousEnemiesSpawnBasedOnDifficulty: 1
+  haveEnemyScaling: 0
+  havePlatforms: 1
+  platformDifficultyRelation: 0
   MinPlatformHeightFromGround: 4
-  MaxPlatformHeightFromGround: 6
+  MaxPlatformHeightFromGround: 10
   havePickups: 0
   haveHazards: 0
   haveCoins: 0
-  haveEnemyScaling: 0
   DoNotInstantiate: 0
   ShowTilesetInfo: 1
 --- !u!4 &1400187117

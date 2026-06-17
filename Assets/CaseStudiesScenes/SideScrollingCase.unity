@@ -765,7 +765,7 @@ MonoBehaviour:
   ConsecutiveWins: 0
   ConsecutiveLosses: 0
   DifficultyIncrement: 0.2
-  Difficulty: 0.67
+  Difficulty: 1
 --- !u!4 &1364505383
 Transform:
   m_ObjectHideFlags: 0
@@ -811,7 +811,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   PlayerPerformanceTracker: {fileID: 1364505382}
-  LevelWidth: 150
+  LevelWidth: 100
   LevelHeight: 50
   TrainingEpisodes: 1000
   Difficulty: 1

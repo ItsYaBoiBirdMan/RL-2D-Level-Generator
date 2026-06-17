@@ -105,7 +105,7 @@ Assets/Scripts/RL
 ├── EnemyDifficultyAdjuster.cs
 └── TileType.cs
 
-Editor/
+Asset/Editor/
 └── CustomRLLevelTrainerInspector.cs
 
 ```

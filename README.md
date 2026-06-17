@@ -38,6 +38,8 @@ The Reinforcement Learning Level Generator is a sophisticated system designed to
 - **GeneratorState.cs** - Defines the state space for the RL agent
 - **GeneratorAction.cs** - Defines the action space for the RL agent
 - **TileType.cs** - Enumerates available tile/block types
+- **EnemyObject.cs** - Scriptable Object used to have different enemy objects based on difficulty
+- **CustomRLLevelTrainerInspector.cs** - Editor Script so allow custom interations for the object with the RLLevelTrainer.cs
 
 ---
 

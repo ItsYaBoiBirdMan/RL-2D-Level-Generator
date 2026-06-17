@@ -158,7 +158,9 @@ Asset/Editor/
 | Left Edge Trigger | Trigger Collider | Prevents enemies falling left |
 | Right Edge Trigger | Trigger Collider | Prevents enemies falling right |
 | Side Scrolling Enemy | Optional | Will scale with difficulty |
+| Side Scrolling Enemy Object List | Optional | Used to have different enemies spawn based on difficulty |
 | Top Down Enemy | Optional | Will scale with difficulty |
+| Top Down Enemy Object List| Optional | Used to have different enemies spawn based on difficulty |
 | Coin Prefab | Optional | Collectible items |
 | Pickup Prefab | Optional | Health/power-ups |
 | Hazard Prefab | Optional | Obstacles/damage zones |

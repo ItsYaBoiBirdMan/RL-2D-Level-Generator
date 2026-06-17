@@ -194,8 +194,20 @@ If your game includes enemies:
 2. Public variables available:
    - `MaxHealth` - Enemy health scaled by difficulty
    - `MovementSpeed` - Enemy speed scaled by difficulty
+  
+#### Step 7: Create Enemy Scriptable Objects (Optional)
 
-#### Step 7: Set Up Performance Tracking
+If you desire to have different enemy objects spawn based on the difficulty:
+
+1. Create an `EnemyObject` scriptable object by
+```
+Right Click/Create/ScriptableObjects/Enemy Object
+```
+2. Attach your enemy prefab to the `EnemyPrefab` field
+3. Set the `MinimumDifficultyAllowed` and `MaximumDifficultyAllowed` values
+4. Add these objects to the `Side Scroller Enemy Object List` and/or `Top Down Enemy Object List` fields of the RLLevelTrainer.cs
+
+#### Step 8: Set Up Performance Tracking
 
 1. Create a new empty GameObject
 2. Attach `PlayerPerformanceTracker.cs`
